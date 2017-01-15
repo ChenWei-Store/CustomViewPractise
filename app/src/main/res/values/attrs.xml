@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleNumView">
+        <attr name="largerCircleRadius" format="dimension|reference" />
+        <attr name="loopRadius" format="dimension|reference" />
+        <attr name="outerColor" format="color|reference" />
+        <attr name="innerColor" format="color|reference" />
+        <attr name="numColor" format="color|reference" />
+        <attr name="numTextSize" format="dimension|reference" />
+        <attr name="smallOuterColor" format="color|reference" />
+        <attr name="smallInnterColor" format="color|reference" />
+        <attr name="iconResId" format="integer|reference" />
+        <attr name="num" format="integer" />
+    </declare-styleable>
+
+</resources>
