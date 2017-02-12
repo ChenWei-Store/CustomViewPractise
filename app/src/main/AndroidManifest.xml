@@ -21,6 +21,9 @@
         <activity
             android:name=".activity.CircleNumActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.GoodsNumControllActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

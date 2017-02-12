@@ -4,4 +4,5 @@
 
 
     <string name="circle_num_view">CircleNumView</string>
+    <string name="goods_num_controll_view">GoodsNumControllView</string>
 </resources>

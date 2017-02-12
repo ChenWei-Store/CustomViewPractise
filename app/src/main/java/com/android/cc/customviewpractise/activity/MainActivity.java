@@ -21,6 +21,14 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        findViewById(R.id.tv_goods_num_control).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GoodsNumControllActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

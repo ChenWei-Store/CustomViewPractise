@@ -100,6 +100,7 @@ public class CircleNumView extends View {
         numPaint = new Paint();
         numPaint.setColor(numColor);
         numPaint.setTextSize(numTextSize);
+        numPaint.setAntiAlias(true);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class CircleNumView extends View {
         int numLen = (int)numPaint.measureText(numText);
         int numX = smallCX - numLen / 2;
         Paint.FontMetrics fontMetrics = numPaint.getFontMetrics();
-        int numY = smallCY +  (int)(Math.abs(fontMetrics.ascent) - fontMetrics.descent) / 2;;
+        int numY = smallCY +  (int)(Math.abs(fontMetrics.ascent) - fontMetrics.descent) / 2;
         canvas.drawText(numText, numX, numY, numPaint);
 
         if(iconResId == 0){
