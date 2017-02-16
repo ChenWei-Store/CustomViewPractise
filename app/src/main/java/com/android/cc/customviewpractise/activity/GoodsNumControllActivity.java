@@ -1,6 +1,5 @@
 package com.android.cc.customviewpractise.activity;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.cc.customviewpractise.R;
@@ -17,19 +16,19 @@ public class GoodsNumControllActivity extends BaseActivity {
     @Override
     protected void initView() {
         goodsNumControllerView = (GoodsNumControllerView) findViewById(R.id.tv_goods_num_control);
-        goodsNumControllerView.setOnClickListener(new GoodsNumControllerView.OnClickListener() {
+        goodsNumControllerView.setOnGoodsNumChangedListener(new GoodsNumControllerView.OnGoodsNumChangedListener() {
             @Override
-            public void onLeftClick(int numValue) {
+            public void onClickLeftChanged(int numValue) {
                 Toast.makeText(GoodsNumControllActivity.this, "value:" + numValue,
                         Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onRightClick(int numValue) {
+            public void onClickRightChanged(int numValue) {
                 Toast.makeText(GoodsNumControllActivity.this, "value:" + numValue,
                         Toast.LENGTH_SHORT).show();
             }
         });
-    }
+     }
 
 }
