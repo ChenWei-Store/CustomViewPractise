@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.icu.util.Measure;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -17,7 +16,7 @@ import com.android.cc.customviewpractise.R;
  * author: ChenWei
  * create date: 2017/1/15
  * description: 商品数量控制View
- * 注意：不支持wrap_content
+ *              使用wrap_content的话，默认宽为280px,高为120px
  */
 
 public class GoodsNumControllerView extends View{
@@ -111,6 +110,10 @@ public class GoodsNumControllerView extends View{
             rightText = "－";
         }
         ta.recycle();
+
+        if(numValue < minNum){
+            numValue = minNum;
+        }
     }
 
 
@@ -153,24 +156,31 @@ public class GoodsNumControllerView extends View{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        //不支持wrap_content
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
+        if(widthMode == MeasureSpec.AT_MOST){
+            width = (260 + getPaddingLeft() + getPaddingRight());
+        }
+        if(heightMode == MeasureSpec.AT_MOST){
+            height = 80 + getPaddingTop() +getPaddingBottom();
+        }
         setMeasuredDimension(width, height);
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int canvasWidth = canvas.getWidth();
-        int canvasHeight = canvas.getHeight();
+        int canvasWidth = canvas.getWidth() - getPaddingLeft() - getPaddingRight();
+        int canvasHeight = canvas.getHeight() - getPaddingTop() - getPaddingBottom();
         circleRadius = canvasHeight / 2;
+//
+//        Paint paint = new Paint();
+//        paint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_orange_dark));
+//        canvas.drawRect(0,0,canvasWidth, canvasHeight, paint);
 
-        Paint paint = new Paint();
-        paint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_orange_dark));
-        canvas.drawRect(0,0,canvasWidth, canvasHeight, paint);
 
         //左边圆
         int leftCircleX = circleRadius;
@@ -208,19 +218,41 @@ public class GoodsNumControllerView extends View{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_UP){
+        boolean isConsumed = false;
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
             int x = (int)event.getX();
             //判断点击位置
             if(x <= circleRadius  * 2){
-                performCompute(true);
-                performListener(true);
+                if(subtractionIsLeft){
+                    if(!subtraction()){
+                        return true;
+                    }
+                }else{
+                    if(!addition()){
+                        return true;
+                    }
+                }
+                onClickListener.onClickLeftChanged(numValue);
+                invalidate();
+                isConsumed = true;
             }else if(x >= centerWidth + circleRadius ){
-                performCompute(false);
-                performListener(false);
+                if(subtractionIsLeft){
+                    if(!addition()){
+                        return true;
+                    }
+                }else{
+                    if(!subtraction()){
+                        return true;
+                    }
+                }
+                onClickListener.onClickRightChanged(numValue);
+                invalidate();
+                isConsumed = true;
             }
+
         }
 
-        return true;
+        return isConsumed;
     }
 
 
@@ -231,12 +263,14 @@ public class GoodsNumControllerView extends View{
 
     /**
      * 增加
+     * @return false:以达到最大值，不能增加
      */
-    private void addition(){
-        if(numValue >= maxNum){
-            return;
+    private boolean addition(){
+        if(numValue == maxNum){
+            return false;
         }
         numValue++;
+        return true;
     }
 
     /**
@@ -250,54 +284,21 @@ public class GoodsNumControllerView extends View{
 
     /**
      * 减少
+     * @return false:已达到最小值，不能减小
      */
-    private void subtraction(){
-        if(numValue <= minNum){
-            return;
+    private boolean subtraction(){
+        if(numValue == minNum){
+            return false;
         }
         numValue--;
+        return true;
     }
 
     public void setOnGoodsNumChangedListener(@Nullable OnGoodsNumChangedListener onClickListener){
         this.onClickListener = onClickListener;
     }
 
-    /**
-     * 执行回调
-     * @param isLeft
-     */
-    private void performListener(boolean isLeft){
-        if(onClickListener == null){
-            return;
-        }
 
-        if(isLeft){
-            onClickListener.onClickLeftChanged(numValue);
-        }else{
-            onClickListener.onClickRightChanged(numValue);
-        }
-    }
-
-    /**
-     * 执行数量的更新
-     * @param isLeft
-     */
-    private void performCompute(boolean isLeft){
-        if(isLeft){
-            if(subtractionIsLeft){
-                subtraction();
-            }else{
-                addition();
-            }
-        }else{
-            if(subtractionIsLeft){
-                addition();
-            }else{
-                subtraction();
-            }
-        }
-        invalidate();
-    }
 
     /**
      * 商品数量更改时的回调

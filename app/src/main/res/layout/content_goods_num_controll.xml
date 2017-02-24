@@ -12,9 +12,12 @@
     
     <com.android.cc.customviewpractise.view.GoodsNumControllerView
         android:id="@+id/tv_goods_num_control"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        />
-    
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20px"
+        android:paddingRight="20px"
+        app:maxNum="5"
+        app:minNum="2"
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>
